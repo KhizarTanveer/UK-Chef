@@ -29,18 +29,41 @@ const CoreCommitments = () => {
 
   useEffect(() => {
     let ctx = gsap.context(() => {
-      const cards = gsap.utils.toArray('.organic-card');
+      const wrappers = gsap.utils.toArray('.card-gsap-wrapper');
       const container = containerRef.current;
       
       const setPadding = () => {
         const viewW = window.innerWidth;
-        const cardWidth = cards[0].offsetWidth;
+        if (!wrappers.length) return;
+        const cardWidth = wrappers[0].offsetWidth;
         container.style.paddingLeft = `${(viewW - cardWidth) / 2}px`;
         container.style.paddingRight = `${(viewW - cardWidth) / 2}px`;
       };
 
       setPadding();
       ScrollTrigger.addEventListener("refreshInit", setPadding);
+
+      let maxScroll = 0;
+      let wrapperData = [];
+      let viewW = 0;
+      let viewCenter = 0;
+
+      const calculateLayout = () => {
+        viewW = window.innerWidth;
+        viewCenter = viewW / 2;
+        maxScroll = container.scrollWidth - viewW;
+        
+        const currentContainerX = gsap.getProperty(container, "x") || 0;
+        const containerScreenLeft = container.getBoundingClientRect().left - currentContainerX;
+
+        wrapperData = wrappers.map(wrapper => ({
+            initialCenter: containerScreenLeft + wrapper.offsetLeft + wrapper.offsetWidth / 2,
+            el: wrapper
+        }));
+      };
+
+      calculateLayout();
+      ScrollTrigger.addEventListener("refresh", calculateLayout);
 
       gsap.to(container, {
         x: () => -(container.scrollWidth - window.innerWidth),
@@ -49,29 +72,26 @@ const CoreCommitments = () => {
           trigger: sectionRef.current,
           pin: true,
           anticipatePin: 1,
-          scrub: 1,
+          scrub: true,
           invalidateOnRefresh: true,
           start: "center center",
           end: () => `+=${container.scrollWidth - window.innerWidth}`,
-          snap: 1 / (cards.length - 1),
+          snap: 1 / (wrappers.length - 1),
           onUpdate: (self) => {
             gsap.set(progressRef.current, { scaleX: self.progress });
 
-            const currentCenter = window.innerWidth / 2;
-            const isMobile = window.innerWidth < 768;
+            const currentX = -maxScroll * self.progress;
+            const isMobile = viewW < 768;
             
-            // Phase 1: Read Layout (No Writes)
-            const rects = cards.map(card => card.getBoundingClientRect());
-            
-            // Phase 2: Write Animations (No Reads)
-            rects.forEach((rect, i) => {
-              const cardCenter = rect.left + rect.width / 2;
-              const distFromCenter = Math.abs(currentCenter - cardCenter);
+            for(let i = 0; i < wrapperData.length; i++) {
+              const data = wrapperData[i];
+              const cardScreenCenter = data.initialCenter + currentX;
+              const distFromCenter = Math.abs(viewCenter - cardScreenCenter);
 
               const deadzone = 40; 
               let effectiveDist = distFromCenter <= deadzone ? 0 : distFromCenter - deadzone;
 
-              const maxDist = window.innerWidth * 0.5;
+              const maxDist = viewW * 0.5;
               const normalizedDist = Math.min(effectiveDist / maxDist, 1);
 
               const scale = 1 - (normalizedDist * 0.05); 
@@ -85,21 +105,20 @@ const CoreCommitments = () => {
 
               if (!isMobile) {
                 const blur = normalizedDist > 0.02 ? normalizedDist * 1.5 : 0; 
-                vars.filter = blur > 0 ? `blur(${blur}px)` : 'blur(0px)';
+                vars.filter = blur > 0 ? `blur(${blur}px)` : 'none';
               } else {
                 vars.filter = 'none';
               }
 
-              gsap.set(cards[i], vars);
-            });
+              gsap.set(data.el, vars);
+            }
           }
         }
       });
 
-      ScrollTrigger.refresh();
-
       return () => {
         ScrollTrigger.removeEventListener("refreshInit", setPadding);
+        ScrollTrigger.removeEventListener("refresh", calculateLayout);
       };
     }, sectionRef);
 
@@ -128,12 +147,17 @@ const CoreCommitments = () => {
           {commitments.map((c, i) => (
             <div 
               key={i} 
-              className="organic-card" 
-              style={{ borderRadius: borderRadii[i % borderRadii.length] }}
+              className="card-gsap-wrapper"
+              style={{ flexShrink: 0, scrollSnapAlign: 'center', willChange: 'transform' }}
             >
-              <div className="card-badge">{(i + 1).toString().padStart(2, '0')}</div>
-              <h3 style={{ color: 'var(--color-text-dark)', fontSize: '1.4rem', fontWeight: 700, marginBottom: '20px' }}>{c.title}</h3>
-              <p style={{ margin: 0, color: 'var(--color-text-muted)', lineHeight: 1.8 }}>{c.desc}</p>
+              <div 
+                className="organic-card" 
+                style={{ borderRadius: borderRadii[i % borderRadii.length] }}
+              >
+                <div className="card-badge">{(i + 1).toString().padStart(2, '0')}</div>
+                <h3 style={{ color: 'var(--color-text-dark)', fontSize: '1.4rem', fontWeight: 700, marginBottom: '20px' }}>{c.title}</h3>
+                <p style={{ margin: 0, color: 'var(--color-text-muted)', lineHeight: 1.8 }}>{c.desc}</p>
+              </div>
             </div>
           ))}
         </div>
