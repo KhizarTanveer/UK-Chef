@@ -48,6 +48,7 @@ const CoreCommitments = () => {
         scrollTrigger: {
           trigger: sectionRef.current,
           pin: true,
+          anticipatePin: 1,
           scrub: 1,
           invalidateOnRefresh: true,
           start: "center center",
@@ -57,9 +58,13 @@ const CoreCommitments = () => {
             gsap.set(progressRef.current, { scaleX: self.progress });
 
             const currentCenter = window.innerWidth / 2;
+            const isMobile = window.innerWidth < 768;
             
-            cards.forEach((card) => {
-              const rect = card.getBoundingClientRect();
+            // Phase 1: Read Layout (No Writes)
+            const rects = cards.map(card => card.getBoundingClientRect());
+            
+            // Phase 2: Write Animations (No Reads)
+            rects.forEach((rect, i) => {
               const cardCenter = rect.left + rect.width / 2;
               const distFromCenter = Math.abs(currentCenter - cardCenter);
 
@@ -71,13 +76,21 @@ const CoreCommitments = () => {
 
               const scale = 1 - (normalizedDist * 0.05); 
               const opacity = 1 - (normalizedDist * 0.2); 
-              const blur = normalizedDist > 0.02 ? normalizedDist * 1.5 : 0; 
-
-              gsap.set(card, {
+              
+              const vars = {
                 scale: scale,
                 opacity: opacity,
-                filter: blur > 0 ? `blur(${blur}px)` : 'blur(0px)',
-              });
+                force3D: true
+              };
+
+              if (!isMobile) {
+                const blur = normalizedDist > 0.02 ? normalizedDist * 1.5 : 0; 
+                vars.filter = blur > 0 ? `blur(${blur}px)` : 'blur(0px)';
+              } else {
+                vars.filter = 'none';
+              }
+
+              gsap.set(cards[i], vars);
             });
           }
         }
