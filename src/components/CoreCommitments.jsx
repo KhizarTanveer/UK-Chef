@@ -43,31 +43,7 @@ const CoreCommitments = () => {
       setPadding();
       ScrollTrigger.addEventListener("refreshInit", setPadding);
 
-      let maxScroll = 0;
-      let wrapperData = [];
-      let viewW = 0;
-      let viewCenter = 0;
-
-      const calculateLayout = () => {
-        viewW = window.innerWidth;
-        viewCenter = viewW / 2;
-        maxScroll = container.scrollWidth - viewW;
-        
-        const currentContainerX = gsap.getProperty(container, "x") || 0;
-        const containerScreenLeft = container.getBoundingClientRect().left - currentContainerX;
-
-        wrapperData = wrappers.map(wrapper => ({
-            initialCenter: containerScreenLeft + wrapper.offsetLeft + wrapper.offsetWidth / 2,
-            el: wrapper
-        }));
-      };
-
-      calculateLayout();
-      ScrollTrigger.addEventListener("refresh", calculateLayout);
-
-      gsap.to(container, {
-        x: () => -(container.scrollWidth - window.innerWidth),
-        ease: "none",
+      const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
           pin: true,
@@ -79,46 +55,50 @@ const CoreCommitments = () => {
           snap: 1 / (wrappers.length - 1),
           onUpdate: (self) => {
             gsap.set(progressRef.current, { scaleX: self.progress });
-
-            const currentX = -maxScroll * self.progress;
-            const isMobile = viewW < 768;
-            
-            for(let i = 0; i < wrapperData.length; i++) {
-              const data = wrapperData[i];
-              const cardScreenCenter = data.initialCenter + currentX;
-              const distFromCenter = Math.abs(viewCenter - cardScreenCenter);
-
-              const deadzone = 40; 
-              let effectiveDist = distFromCenter <= deadzone ? 0 : distFromCenter - deadzone;
-
-              const maxDist = viewW * 0.5;
-              const normalizedDist = Math.min(effectiveDist / maxDist, 1);
-
-              const scale = 1 - (normalizedDist * 0.05); 
-              const opacity = 1 - (normalizedDist * 0.2); 
-              
-              const vars = {
-                scale: scale,
-                opacity: opacity,
-                force3D: true
-              };
-
-              if (!isMobile) {
-                const blur = normalizedDist > 0.02 ? normalizedDist * 1.5 : 0; 
-                vars.filter = blur > 0 ? `blur(${blur}px)` : 'none';
-              } else {
-                vars.filter = 'none';
-              }
-
-              gsap.set(data.el, vars);
-            }
           }
+        }
+      });
+
+      // 1. The primary horizontal movement
+      tl.to(container, {
+        x: () => -(container.scrollWidth - window.innerWidth),
+        ease: "none",
+        duration: 1
+      }, 0);
+
+      // 2. Mathematically precise pre-calculated animations
+      const durationPerCard = 1 / (wrappers.length - 1);
+
+      wrappers.forEach((wrapper, i) => {
+        gsap.set(wrapper, { scale: 0.75, opacity: 0.2, force3D: true });
+
+        const tCenter = i * durationPerCard;
+
+        // Animate TO peak (fade/scale in)
+        if (i > 0) {
+          tl.to(wrapper, {
+            scale: 1,
+            opacity: 1,
+            ease: "none",
+            duration: durationPerCard
+          }, tCenter - durationPerCard);
+        } else {
+          gsap.set(wrapper, { scale: 1, opacity: 1 });
+        }
+
+        // Animate FROM peak (fade/scale out)
+        if (i < wrappers.length - 1) {
+          tl.to(wrapper, {
+            scale: 0.75,
+            opacity: 0.2,
+            ease: "none",
+            duration: durationPerCard
+          }, tCenter);
         }
       });
 
       return () => {
         ScrollTrigger.removeEventListener("refreshInit", setPadding);
-        ScrollTrigger.removeEventListener("refresh", calculateLayout);
       };
     }, sectionRef);
 
@@ -127,8 +107,8 @@ const CoreCommitments = () => {
 
   return (
     <section className="section bg-light" ref={sectionRef} style={{ position: 'relative' }}>
-      <div className="bg-blur-circles" style={{ left: '-10%' }}></div>
-      <div className="bg-blur-circles" style={{ right: '-10%', top: '30%', backgroundColor: 'var(--color-brand-red)', opacity: 0.05 }}></div>
+      <div className="bg-blur-circles" style={{ left: '-10%', transform: 'translateZ(0)', willChange: 'transform' }}></div>
+      <div className="bg-blur-circles" style={{ right: '-10%', top: '30%', backgroundColor: 'var(--color-brand-red)', opacity: 0.05, transform: 'translateZ(0)', willChange: 'transform' }}></div>
       
       <div className="container" style={{ position: 'relative', zIndex: 2 }}>
         <div style={{ textAlign: 'center', marginBottom: '60px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
