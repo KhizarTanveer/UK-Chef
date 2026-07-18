@@ -47,12 +47,11 @@ const CoreCommitments = () => {
         scrollTrigger: {
           trigger: sectionRef.current,
           pin: true,
-          anticipatePin: 1,
+          pinType: "transform",
           scrub: true,
           invalidateOnRefresh: true,
           start: "center center",
           end: () => `+=${container.scrollWidth - window.innerWidth}`,
-          snap: 1 / (wrappers.length - 1),
           onUpdate: (self) => {
             gsap.set(progressRef.current, { scaleX: self.progress });
           }
