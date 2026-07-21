@@ -5,15 +5,29 @@ const ScrollProgress = () => {
   const progressRef = useRef(null);
 
   useEffect(() => {
+    // Create a highly optimized setter to bypass standard tween overhead
+    const setY = gsap.quickSetter(progressRef.current, "scaleY");
+    
+    let isTicking = false;
+
     const onScroll = () => {
-      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = window.scrollY / scrollHeight;
-      if (progressRef.current) {
-        gsap.to(progressRef.current, { scaleY: progress, duration: 0.1, ease: "none" });
+      if (!isTicking) {
+        window.requestAnimationFrame(() => {
+          const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+          const progress = window.scrollY / scrollHeight;
+          setY(progress);
+          isTicking = false;
+        });
+        isTicking = true;
       }
     };
     
-    window.addEventListener('scroll', onScroll);
+    // Use passive listener to avoid blocking main scroll thread
+    window.addEventListener('scroll', onScroll, { passive: true });
+    
+    // Initial set
+    onScroll();
+
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 

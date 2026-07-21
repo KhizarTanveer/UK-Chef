@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
+import AnimatedCardBg from './AnimatedCardBg';
 
 const rawProducts = [
   "Chicken Tikka Masala", "Chicken Tandoori Masala", "Shawarma Masala", "Fajita Masala", "Zinger Marinade (Regular)", "Hot Zinger Marinade (Spicy)", "Broast Masala", "Flour Seasoning", "Grill Marination", "Biryani Masala", "Qorma Masala", "Achar Gosht Masala", "Karahi Gosht Masala", "Chicken Chatpata Sprinkle Masala (Economy)", "Chicken Chatpata Sprinkle Masala", "Chicken Cheese Masala", "Chicken Lemon Masala", "Chicken Salty Masala", "Chaat Masala VVIP", "Potato Fries Masala", "Tenderizing Powder", "Chicken Stock Powder", "Garlic Powder (A Quality)", "Garlic Powder (Economy)", "Ginger Powder (A Quality)", "Ginger Powder (Economy)", "Onion Powder", "Taiz Lal Mirch Powder", "Crush Chilli", "Pure Pink Himalayan Salt", "Zeera Powder", "Garam Masala Powder (Executive Quality VVIP)", "Dhaniya Powder (Coriander)", "Black Pepper Powder", "White Pepper Powder", "Daarchini Powder (Cinnamon)", "Haldi Powder", "Jaifal", "Javatri", "Long (Cloves)", "White Synthetic Vinegar (UKCHEF Brand)", "White Synthetic Vinegar (CHEFLIKE Brand)", "Green Chilli Sauce", "Pizza Sauce", "Hot Chilli Sauce", "Tomato Sauce", "Chilli Garlic Sauce", "UKCHEF Dressing Mayo"
@@ -31,6 +32,45 @@ const borderRadii = [
 ];
 
 const PortfolioShowcase = () => {
+  const scrollRef = useRef(null);
+  const progressRef = useRef(null);
+
+  useEffect(() => {
+    const scrollContainer = scrollRef.current;
+    const progressBar = progressRef.current;
+    if (!scrollContainer || !progressBar) return;
+
+    let ticking = false;
+
+    const updateProgress = () => {
+      const scrollLeft = scrollContainer.scrollLeft;
+      const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+      const progress = maxScroll > 0 ? (scrollLeft / maxScroll) : 0;
+      
+      progressBar.style.transform = `scaleX(${progress})`;
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateProgress);
+        ticking = true;
+      }
+    };
+
+    // Use passive listener for maximum scroll performance
+    scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll, { passive: true });
+    
+    // Set initial state
+    updateProgress();
+
+    return () => {
+      scrollContainer.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, []);
+
   return (
     <section className="section bg-light" style={{ position: 'relative', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', top: '50%', left: '20%', width: '800px', height: '800px', background: 'var(--color-brand-red)', filter: 'blur(200px)', opacity: 0.1, borderRadius: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}></div>
@@ -49,18 +89,53 @@ const PortfolioShowcase = () => {
       </div>
 
       <div style={{ position: 'relative', zIndex: 3, width: '100%' }}>
-        <div className="native-horizontal-scroll">
+        <div 
+          className="native-horizontal-scroll"
+          ref={scrollRef}
+        >
           {products.map((product, i) => (
             <div 
               key={i} 
-              className="organic-card" 
-              style={{ borderRadius: borderRadii[i % borderRadii.length], scrollSnapAlign: 'start' }}
+              className="organic-card network-hero-glass" 
+              style={{ 
+                borderRadius: borderRadii[i % borderRadii.length], 
+                scrollSnapAlign: 'start',
+                minHeight: '280px',
+                height: 'auto',
+                padding: '40px 30px'
+              }}
             >
-              <div className="card-badge" style={{ zIndex: 0 }}>{(i + 1).toString().padStart(2, '0')}</div>
-              <h3 style={{ position: 'relative', zIndex: 1, color: 'var(--color-text-dark)', fontSize: 'clamp(1.15rem, 3.5vw, 1.4rem)', fontWeight: 700, marginBottom: '15px', lineHeight: 1.3 }}>{product.name}</h3>
-              <p style={{ position: 'relative', zIndex: 1, margin: 0, color: 'var(--color-text-muted)', lineHeight: 1.8, textTransform: 'uppercase', letterSpacing: '1px', fontSize: '0.85rem', fontWeight: 600 }}>{product.category}</p>
+              {/* Premium Geometric Animated SVG Background */}
+              <AnimatedCardBg i={i} />
+
+              <div className="card-badge" style={{ position: 'absolute', top: '10%', right: '5%', zIndex: 0, opacity: 1, color: 'white' }}>{(i + 1).toString().padStart(2, '0')}</div>
+              <h3 style={{ position: 'relative', zIndex: 1, color: '#ffffff', fontSize: 'clamp(1.15rem, 3.5vw, 1.4rem)', fontWeight: 700, marginBottom: '15px', lineHeight: 1.3 }}>{product.name}</h3>
+              <p style={{ position: 'relative', zIndex: 1, margin: 0, color: 'rgba(255,255,255,0.7)', lineHeight: 1.8, textTransform: 'uppercase', letterSpacing: '1px', fontSize: '0.85rem', fontWeight: 600 }}>{product.category}</p>
             </div>
           ))}
+        </div>
+
+        {/* Minimal Progress Bar */}
+        <div style={{
+          width: '200px',
+          height: '4px',
+          background: 'rgba(0,0,0,0.06)',
+          borderRadius: '4px',
+          margin: '30px auto 0',
+          overflow: 'hidden'
+        }}>
+          <div 
+            ref={progressRef}
+            style={{
+              height: '100%',
+              width: '100%',
+              background: 'var(--color-premium-gold)',
+              transformOrigin: 'left',
+              transform: 'scaleX(0)',
+              willChange: 'transform',
+              borderRadius: '4px'
+            }}
+          />
         </div>
       </div>
     </section>
@@ -68,3 +143,4 @@ const PortfolioShowcase = () => {
 };
 
 export default PortfolioShowcase;
+

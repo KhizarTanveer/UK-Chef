@@ -14,6 +14,7 @@ export const useGsapAnimation = () => {
       
       // BACKGROUND LAYER: Slow parallax, subtle scale
       gsap.utils.toArray('.gsap-bg').forEach((el) => {
+        gsap.set(el, { willChange: "transform", force3D: true });
         gsap.fromTo(el,
           { y: "-10%", scale: 1.05 },
           {
@@ -32,6 +33,7 @@ export const useGsapAnimation = () => {
 
       // MIDGROUND LAYER: Standard text and content elements
       gsap.utils.toArray('.gsap-mid').forEach((el) => {
+        gsap.set(el, { willChange: "transform, opacity", force3D: true });
         let tl = gsap.timeline({
           scrollTrigger: { 
             trigger: el, 
@@ -48,6 +50,7 @@ export const useGsapAnimation = () => {
 
       // FOREGROUND LAYER: Cards floating closer to the camera
       gsap.utils.toArray('.gsap-fg').forEach((el) => {
+        gsap.set(el, { willChange: "transform, opacity", force3D: true });
         let tl = gsap.timeline({
           scrollTrigger: { 
             trigger: el, 

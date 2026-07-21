@@ -1,11 +1,29 @@
 import React from "react";
 import { useGsapAnimation } from "../hooks/useGsapHooks";
+import AnimatedCardBg from "./AnimatedCardBg";
 
 const CompanyOverview = () => {
   const containerRef = useGsapAnimation();
 
   return (
-    <section className="section" ref={containerRef}>
+    <section className="section bg-light" ref={containerRef} style={{ position: "relative" }}>
+      <style>{`
+        .premium-card.network-hero-glass {
+          overflow: hidden;
+          position: relative;
+          min-height: auto !important;
+          height: 100% !important;
+          padding: 20px 15px !important;
+        }
+        .premium-card.network-hero-glass > * {
+          position: relative;
+          z-index: 1;
+        }
+        .premium-card.network-hero-glass > svg {
+          position: absolute !important;
+          z-index: 0 !important;
+        }
+      `}</style>
       <div className="container">
         <div className="editorial-split">
           {/* LEFT SIDE */}
@@ -59,29 +77,32 @@ const CompanyOverview = () => {
                 marginTop: "60px",
               }}
             >
-              <div className="premium-card gsap-fg" style={{ textAlign: "center", padding: "35px 20px" }}>
-                <h2 style={{ color: "var(--color-brand-red)", fontSize: "3.5rem", marginBottom: "5px", letterSpacing: "-0.05em" }}>
+              <div className="premium-card network-hero-glass gsap-fg" style={{ textAlign: "center", padding: "20px 15px" }}>
+                <AnimatedCardBg i={0} />
+                <h2 style={{ color: "#ffffff", fontSize: "2.8rem", marginBottom: "5px", letterSpacing: "-0.05em" }}>
                   100%
                 </h2>
-                <p style={{ color: "var(--color-text-muted)", letterSpacing: "2px", textTransform: "uppercase", fontSize: ".8rem", margin: 0, fontWeight: 600 }}>
+                <p style={{ color: "rgba(255,255,255,0.7)", letterSpacing: "2px", textTransform: "uppercase", fontSize: ".75rem", margin: 0, fontWeight: 600 }}>
                   Pure
                 </p>
               </div>
 
-              <div className="premium-card gsap-fg" style={{ textAlign: "center", padding: "35px 20px" }}>
-                <h2 style={{ color: "var(--color-brand-red)", fontSize: "3.5rem", marginBottom: "5px", letterSpacing: "-0.05em" }}>
+              <div className="premium-card network-hero-glass gsap-fg" style={{ textAlign: "center", padding: "20px 15px" }}>
+                <AnimatedCardBg i={1} />
+                <h2 style={{ color: "#ffffff", fontSize: "2.8rem", marginBottom: "5px", letterSpacing: "-0.05em" }}>
                   PFA
                 </h2>
-                <p style={{ color: "var(--color-text-muted)", letterSpacing: "2px", textTransform: "uppercase", fontSize: ".8rem", margin: 0, fontWeight: 600 }}>
+                <p style={{ color: "rgba(255,255,255,0.7)", letterSpacing: "2px", textTransform: "uppercase", fontSize: ".75rem", margin: 0, fontWeight: 600 }}>
                   Certified
                 </p>
               </div>
 
-              <div className="premium-card gsap-fg" style={{ textAlign: "center", padding: "35px 20px" }}>
-                <h2 style={{ color: "var(--color-brand-red)", fontSize: "3.5rem", marginBottom: "5px", letterSpacing: "-0.05em" }}>
+              <div className="premium-card network-hero-glass gsap-fg" style={{ textAlign: "center", padding: "20px 15px" }}>
+                <AnimatedCardBg i={2} />
+                <h2 style={{ color: "#ffffff", fontSize: "2.8rem", marginBottom: "5px", letterSpacing: "-0.05em" }}>
                   4+
                 </h2>
-                <p style={{ color: "var(--color-text-muted)", letterSpacing: "2px", textTransform: "uppercase", fontSize: ".8rem", margin: 0, fontWeight: 600 }}>
+                <p style={{ color: "rgba(255,255,255,0.7)", letterSpacing: "2px", textTransform: "uppercase", fontSize: ".75rem", margin: 0, fontWeight: 600 }}>
                   Categories
                 </p>
               </div>

@@ -31,6 +31,11 @@ const CorporateStrengths = () => {
 
   return (
     <section className="section bg-light" ref={containerRef} style={{ position: 'relative', overflow: 'hidden' }}>
+      {/* Hide the default white glow overlay from bento-glass-card for these dark cards */}
+      <style>{`
+        .bento-glass-card.quality-cert-card::before { display: none !important; }
+      `}</style>
+      
       {/* Ambient glowing orbs */}
       <div style={{ position: 'absolute', top: '10%', left: '-10%', width: '500px', height: '500px', background: 'var(--color-brand-red)', filter: 'blur(150px)', opacity: 0.08, borderRadius: '50%', pointerEvents: 'none' }}></div>
       <div style={{ position: 'absolute', bottom: '10%', right: '-10%', width: '600px', height: '600px', background: 'var(--color-dark-gold)', filter: 'blur(180px)', opacity: 0.06, borderRadius: '50%', pointerEvents: 'none' }}></div>
@@ -38,7 +43,7 @@ const CorporateStrengths = () => {
       <div className="container" style={{ position: 'relative', zIndex: 2 }}>
         <div className="gsap-mid" style={{ textAlign: 'center', marginBottom: '60px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <div className="section-label">Core Strengths</div>
-          <h2>Why Choose UK Chef</h2>
+          <h2 style={{ color: '#21573cff' }}>Why Choose UK Chef</h2>
           <div className="heading-accent"></div>
         </div>
         
@@ -46,13 +51,29 @@ const CorporateStrengths = () => {
           {strengths.map((s, i) => (
             <div 
               key={i} 
-              className={`bento-glass-card gsap-fg ${getBentoClass(i)}`}
-              style={{ borderRadius: getBorderRadius(i) }}
+              className={`bento-glass-card quality-cert-card gsap-fg ${getBentoClass(i)}`}
+              style={{ 
+                borderRadius: getBorderRadius(i),
+                background: 'linear-gradient(135deg, #051A10 0%, #082818 50%, #062013 100%)',
+                borderColor: 'rgba(255,255,255,0.08)',
+                boxShadow: 'inset 0 1px 2px rgba(255,255,255,0.1), 0 20px 50px rgba(0,0,0,0.25)',
+                padding: '40px'
+              }}
             >
-              <div className="bento-badge">{(i + 1).toString().padStart(2, '0')}</div>
-              <div>
-                <h3 style={{ color: 'var(--color-text-dark)', fontSize: '1.4rem', fontWeight: 700, marginBottom: '15px', lineHeight: 1.3 }}>{s.title}</h3>
-                <p style={{ margin: 0, color: 'var(--color-text-muted)', fontSize: '1rem', lineHeight: 1.6 }}>{s.desc}</p>
+              {/* Hexagon Noise Overlay */}
+              <svg width="100%" height="100%" style={{ position: 'absolute', top: 0, left: 0, opacity: 0.04, pointerEvents: 'none', zIndex: 0 }} xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <pattern id={`hexagons-cs-${i}`} width="50" height="43.4" patternUnits="userSpaceOnUse" patternTransform="scale(1.2)">
+                    <path d="M25 0 L50 14.4 L50 43.3 L25 57.7 L0 43.3 L0 14.4 Z" fill="none" stroke="#FFFFFF" strokeWidth="1.5"/>
+                  </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill={`url(#hexagons-cs-${i})`} />
+              </svg>
+
+              <div className="bento-badge" style={{ zIndex: 1, position: 'absolute', opacity: 1, color: 'white' }}>{(i + 1).toString().padStart(2, '0')}</div>
+              <div style={{ position: 'relative', zIndex: 2 }}>
+                <h3 style={{ color: '#ffffff', fontSize: '1.4rem', fontWeight: 700, marginBottom: '15px', lineHeight: 1.3 }}>{s.title}</h3>
+                <p style={{ margin: 0, color: 'rgba(255,255,255,0.7)', fontSize: '1rem', lineHeight: 1.6 }}>{s.desc}</p>
               </div>
             </div>
           ))}

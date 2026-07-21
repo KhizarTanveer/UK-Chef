@@ -1,12 +1,8 @@
-import React, { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
+import React, { useRef, useEffect } from 'react';
+import AnimatedCardBg from './AnimatedCardBg';
 
 const CoreCommitments = () => {
-  const sectionRef = useRef(null);
-  const containerRef = useRef(null);
+  const scrollRef = useRef(null);
   const progressRef = useRef(null);
 
   const commitments = [
@@ -28,89 +24,49 @@ const CoreCommitments = () => {
   ];
 
   useEffect(() => {
-    let ctx = gsap.context(() => {
-      const wrappers = gsap.utils.toArray('.card-gsap-wrapper');
-      const container = containerRef.current;
+    const scrollContainer = scrollRef.current;
+    const progressBar = progressRef.current;
+    if (!scrollContainer || !progressBar) return;
+
+    let ticking = false;
+
+    const updateProgress = () => {
+      const scrollLeft = scrollContainer.scrollLeft;
+      const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+      const progress = maxScroll > 0 ? (scrollLeft / maxScroll) : 0;
       
-      const setPadding = () => {
-        const viewW = window.innerWidth;
-        if (!wrappers.length) return;
-        const cardWidth = wrappers[0].offsetWidth;
-        container.style.paddingLeft = `${(viewW - cardWidth) / 2}px`;
-        container.style.paddingRight = `${(viewW - cardWidth) / 2}px`;
-      };
+      progressBar.style.transform = `scaleX(${progress})`;
+      ticking = false;
+    };
 
-      setPadding();
-      ScrollTrigger.addEventListener("refreshInit", setPadding);
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateProgress);
+        ticking = true;
+      }
+    };
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          pin: true,
-          anticipatePin: 1,
-          scrub: true,
-          invalidateOnRefresh: true,
-          start: "center center",
-          end: () => `+=${container.scrollWidth - window.innerWidth}`,
-          snap: 1 / (wrappers.length - 1),
-          onUpdate: (self) => {
-            gsap.set(progressRef.current, { scaleX: self.progress });
-          }
-        }
-      });
+    // Use passive listener for maximum scroll performance
+    scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll, { passive: true });
+    
+    // Set initial state
+    updateProgress();
 
-      // 1. The primary horizontal movement
-      tl.to(container, {
-        x: () => -(container.scrollWidth - window.innerWidth),
-        ease: "none",
-        duration: 1
-      }, 0);
-
-      // 2. Mathematically precise pre-calculated animations
-      const durationPerCard = 1 / (wrappers.length - 1);
-
-      wrappers.forEach((wrapper, i) => {
-        gsap.set(wrapper, { scale: 0.75, opacity: 0.2, force3D: true });
-
-        const tCenter = i * durationPerCard;
-
-        // Animate TO peak (fade/scale in)
-        if (i > 0) {
-          tl.to(wrapper, {
-            scale: 1,
-            opacity: 1,
-            ease: "none",
-            duration: durationPerCard
-          }, tCenter - durationPerCard);
-        } else {
-          gsap.set(wrapper, { scale: 1, opacity: 1 });
-        }
-
-        // Animate FROM peak (fade/scale out)
-        if (i < wrappers.length - 1) {
-          tl.to(wrapper, {
-            scale: 0.75,
-            opacity: 0.2,
-            ease: "none",
-            duration: durationPerCard
-          }, tCenter);
-        }
-      });
-
-      return () => {
-        ScrollTrigger.removeEventListener("refreshInit", setPadding);
-      };
-    }, sectionRef);
-
-    return () => ctx.revert();
+    return () => {
+      scrollContainer.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
   }, []);
 
   return (
-    <section className="section bg-light" ref={sectionRef} style={{ position: 'relative' }}>
-      <div className="bg-blur-circles" style={{ left: '-10%', transform: 'translateZ(0)', willChange: 'transform' }}></div>
-      <div className="bg-blur-circles" style={{ right: '-10%', top: '30%', backgroundColor: 'var(--color-brand-red)', opacity: 0.05, transform: 'translateZ(0)', willChange: 'transform' }}></div>
+    <section className="section bg-light" style={{ position: 'relative', overflow: 'hidden' }}>
       
-      <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+      {/* Background blur circles */}
+      <div className="bg-blur-circles" style={{ left: '-10%' }}></div>
+      <div className="bg-blur-circles" style={{ right: '-10%', top: '30%', backgroundColor: 'var(--color-brand-red)', opacity: 0.05 }}></div>
+      
+      <div className="container" style={{ position: 'relative', zIndex: 2, pointerEvents: 'none' }}>
         <div style={{ textAlign: 'center', marginBottom: '60px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <div className="section-label">Quality Pillars</div>
           <h2>Our Commitment</h2>
@@ -122,32 +78,60 @@ const CoreCommitments = () => {
         </div>
       </div>
 
-      <div className="horizontal-scroll-wrapper">
-        <div className="horizontal-scroll-container" ref={containerRef}>
+      <div style={{ position: 'relative', zIndex: 3, width: '100%' }}>
+        <div 
+          className="native-horizontal-scroll"
+          ref={scrollRef}
+        >
           {commitments.map((c, i) => (
             <div 
               key={i} 
-              className="card-gsap-wrapper"
-              style={{ flexShrink: 0, scrollSnapAlign: 'center', willChange: 'transform' }}
+              className="organic-card network-hero-glass" 
+              style={{ 
+                borderRadius: borderRadii[i % borderRadii.length], 
+                scrollSnapAlign: 'start',
+                minHeight: '280px',
+                height: 'auto',
+                padding: '45px 35px'
+              }}
             >
-              <div 
-                className="organic-card" 
-                style={{ borderRadius: borderRadii[i % borderRadii.length] }}
-              >
-                <div className="card-badge">{(i + 1).toString().padStart(2, '0')}</div>
-                <h3 style={{ color: 'var(--color-text-dark)', fontSize: '1.4rem', fontWeight: 700, marginBottom: '20px' }}>{c.title}</h3>
-                <p style={{ margin: 0, color: 'var(--color-text-muted)', lineHeight: 1.8 }}>{c.desc}</p>
-              </div>
+              {/* Premium Geometric Animated SVG Background */}
+              <AnimatedCardBg i={i} />
+
+              <div className="card-badge" style={{ position: 'absolute', top: '10%', right: '5%', zIndex: 0, opacity: 1, color: 'white' }}>{(i + 1).toString().padStart(2, '0')}</div>
+              <h3 style={{ position: 'relative', zIndex: 1, color: '#ffffff', fontSize: '1.4rem', fontWeight: 700, marginBottom: '20px' }}>{c.title}</h3>
+              <p style={{ position: 'relative', zIndex: 1, margin: 0, color: 'rgba(255,255,255,0.7)', lineHeight: 1.8 }}>{c.desc}</p>
             </div>
           ))}
         </div>
-      </div>
 
-      <div className="scroll-progress-track">
-        <div className="scroll-progress-fill" ref={progressRef}></div>
+        {/* Minimal Progress Bar */}
+        <div style={{
+          width: '200px',
+          height: '4px',
+          background: 'rgba(0,0,0,0.06)',
+          borderRadius: '4px',
+          margin: '30px auto 0',
+          overflow: 'hidden'
+        }}>
+          <div 
+            ref={progressRef}
+            style={{
+              height: '100%',
+              width: '100%',
+              background: 'var(--color-premium-gold)',
+              transformOrigin: 'left',
+              transform: 'scaleX(0)',
+              willChange: 'transform',
+              borderRadius: '4px'
+            }}
+          />
+        </div>
       </div>
     </section>
   );
 };
 
 export default CoreCommitments;
+
+
