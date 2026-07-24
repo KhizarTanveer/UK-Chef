@@ -34,6 +34,21 @@ const CorporateStrengths = () => {
       {/* Hide the default white glow overlay from bento-glass-card for these dark cards */}
       <style>{`
         .bento-glass-card.quality-cert-card::before { display: none !important; }
+        .why-choose-image {
+          width: 100%;
+          height: auto;
+          aspect-ratio: 16 / 9;
+          object-fit: cover;
+          object-position: center;
+          border-radius: 20px;
+          box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+          margin-bottom: 32px;
+        }
+        @media (max-width: 768px) {
+          .why-choose-image {
+            border-radius: 12px;
+          }
+        }
       `}</style>
       
       {/* Ambient glowing orbs */}
@@ -41,10 +56,20 @@ const CorporateStrengths = () => {
       <div style={{ position: 'absolute', bottom: '10%', right: '-10%', width: '600px', height: '600px', background: 'var(--color-dark-gold)', filter: 'blur(180px)', opacity: 0.06, borderRadius: '50%', pointerEvents: 'none' }}></div>
 
       <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-        <div className="gsap-mid" style={{ textAlign: 'center', marginBottom: '60px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div className="gsap-mid" style={{ textAlign: 'center', marginBottom: '32px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <div className="section-label">Core Strengths</div>
           <h2 style={{ color: '#21573cff' }}>Why Choose UK Chef</h2>
           <div className="heading-accent"></div>
+        </div>
+
+        <div className="gsap-mid" style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+          <img 
+            src="/assets/why-choose-us.png" 
+            alt="Why Choose UK Chef" 
+            className="why-choose-image"
+            loading="lazy"
+            decoding="async"
+          />
         </div>
         
         <div className="bento-grid">

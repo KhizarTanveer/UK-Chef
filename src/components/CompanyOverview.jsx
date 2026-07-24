@@ -1,12 +1,9 @@
 import React from "react";
-import { useGsapAnimation } from "../hooks/useGsapHooks";
 import AnimatedCardBg from "./AnimatedCardBg";
 
 const CompanyOverview = () => {
-  const containerRef = useGsapAnimation();
-
   return (
-    <section className="section bg-light" ref={containerRef} style={{ position: "relative" }}>
+    <section className="section bg-light" style={{ position: "relative" }}>
       <style>{`
         .premium-card.network-hero-glass {
           overflow: hidden;
@@ -27,7 +24,7 @@ const CompanyOverview = () => {
       <div className="container">
         <div className="editorial-split">
           {/* LEFT SIDE */}
-          <div className="gsap-mid">
+          <div>
             <span className="section-label">COMPANY PROFILE</span>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '24px', marginBottom: '20px' }}>
@@ -77,7 +74,7 @@ const CompanyOverview = () => {
                 marginTop: "60px",
               }}
             >
-              <div className="premium-card network-hero-glass gsap-fg" style={{ textAlign: "center", padding: "20px 15px" }}>
+              <div className="premium-card network-hero-glass" style={{ textAlign: "center", padding: "20px 15px" }}>
                 <AnimatedCardBg i={0} />
                 <h2 style={{ color: "#ffffff", fontSize: "2.8rem", marginBottom: "5px", letterSpacing: "-0.05em" }}>
                   100%
@@ -87,7 +84,7 @@ const CompanyOverview = () => {
                 </p>
               </div>
 
-              <div className="premium-card network-hero-glass gsap-fg" style={{ textAlign: "center", padding: "20px 15px" }}>
+              <div className="premium-card network-hero-glass" style={{ textAlign: "center", padding: "20px 15px" }}>
                 <AnimatedCardBg i={1} />
                 <h2 style={{ color: "#ffffff", fontSize: "2.8rem", marginBottom: "5px", letterSpacing: "-0.05em" }}>
                   PFA
@@ -97,7 +94,7 @@ const CompanyOverview = () => {
                 </p>
               </div>
 
-              <div className="premium-card network-hero-glass gsap-fg" style={{ textAlign: "center", padding: "20px 15px" }}>
+              <div className="premium-card network-hero-glass" style={{ textAlign: "center", padding: "20px 15px" }}>
                 <AnimatedCardBg i={2} />
                 <h2 style={{ color: "#ffffff", fontSize: "2.8rem", marginBottom: "5px", letterSpacing: "-0.05em" }}>
                   4+
@@ -112,7 +109,6 @@ const CompanyOverview = () => {
           {/* IMAGE */}
           <div className="premium-radius premium-image-hover-container" style={{ position: 'relative', overflow: 'hidden', height: 'auto', display: 'flex' }}>
             <img
-              className="gsap-bg"
               src="https://res.cloudinary.com/dwgwwlbrg/image/upload/v1784385522/16699c4c-a4ac-4e93-b271-8a296e9eaafd_nfwbgr.png"
               alt="Premium Spices"
               style={{ width: '100%', height: 'auto', display: 'block' }}
