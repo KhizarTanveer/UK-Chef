@@ -4,11 +4,11 @@ import { useGsapAnimation } from '../hooks/useGsapHooks';
 const CorporateStrengths = () => {
   const containerRef = useGsapAnimation();
   const strengths = [
-    { title: "Trusted Pakistani Manufacturer", desc: "Deep roots in Pakistan's spice heritage." },
+    { title: "Trusted Pakistani Manufacturer", desc: "Deep roots in Pakistan's Product heritage." },
     { title: "Premium Ingredients", desc: "Sourcing only the finest crops." },
     { title: "Rich Aroma", desc: "Preserving natural essential oils." },
     { title: "Advanced Processing", desc: "State-of-the-art hygienic milling." },
-    { title: "Reliable Supply Chain", desc: "Uninterrupted global distribution." },
+    { title: "Reliable Supply Chain", desc: "Uninterrupted Local distribution." },
     { title: "Customer Satisfaction", desc: "Preferred by top culinary professionals." },
     { title: "Consistent Taste", desc: "Standardized flavor profiles year-round." },
     { title: "Hygienic Packaging", desc: "Tamper-proof, food-grade materials." }

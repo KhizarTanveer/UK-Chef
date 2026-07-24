@@ -82,8 +82,8 @@ const PortfolioShowcase = () => {
           <h2>Product Portfolio</h2>
           <div className="heading-accent"></div>
           <p style={{ maxWidth: '600px', margin: '0 auto' }}>
-            A comprehensive range of premium spices and customized blends tailored for the 
-            global food industry.
+            A comprehensive range of premium products and customized blends tailored for the 
+            Pakistan food industry.
           </p>
         </div>
       </div>

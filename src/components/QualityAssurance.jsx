@@ -71,8 +71,8 @@ const QualityAssurance = () => {
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                  </svg>
                  <div>
-                   <h3 style={{ color: 'white', fontSize: '1.1rem', marginBottom: '5px' }}>Internationally Certified</h3>
-                   <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem', margin: 0 }}>FSSAI, ISO 22000, and fully HACCP compliant facility.</p>
+                   <h3 style={{ color: 'white', fontSize: '1.1rem', marginBottom: '5px' }}>Pakistan Food Authority Certified</h3>
+                   <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem', margin: 0 }}></p>
                  </div>
               </div>
 

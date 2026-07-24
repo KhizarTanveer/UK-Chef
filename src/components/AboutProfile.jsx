@@ -19,7 +19,7 @@ const AboutProfile = () => {
           
           <p>
             Established with a vision to deliver uncompromised quality, UK Chef London Foods 
-            has grown into a recognizable mark of excellence in the <span style={{ color: 'var(--color-brand-green)', fontWeight: '600' }}>FMCG sector</span>. 
+            has grown into a recognizable mark of excellence in the <span style={{ color: 'var(--color-brand-green)', fontWeight: '600' }}>Pakistan's Industry</span>. 
           </p>
           <p>
             Our operations span across global supply chains, meticulously sourcing raw materials 

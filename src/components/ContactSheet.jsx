@@ -119,17 +119,7 @@ const ContactSheet = () => {
               <div className="contact-card-info">Mon - Sat: 9am - 6pm</div>
             </div>
 
-            {/* Export */}
-            <div className="contact-glass-card network-hero-glass gsap-fg">
-              <AnimatedCardBg i={4} />
-              <div style={{ color: 'var(--color-brand-red)', marginBottom: '15px' }}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-                </svg>
-              </div>
-              <div className="contact-card-label">Export</div>
-              <div className="contact-card-info">Global Supply Chain</div>
-            </div>
+            
 
           </div>
         </div>

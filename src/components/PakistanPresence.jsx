@@ -122,7 +122,7 @@ const PakistanPresence = () => {
                 </div>
                 <div className="contact-card-label" style={{ color: 'rgba(255,255,255,0.6)' }}>Industrial</div>
                 <div className="contact-card-info" style={{ color: '#ffffff', fontSize: '1.2rem', marginBottom: '8px' }}>Food Businesses</div>
-                <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.9rem', lineHeight: 1.5 }}>Customized bulk supply solutions for large scale industrial use.</div>
+                <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.9rem', lineHeight: 1.5 }}>Customized bulk supply solutions for large scale Restaurants, Hotels and Wholesale use.</div>
               </div>
 
             </div>

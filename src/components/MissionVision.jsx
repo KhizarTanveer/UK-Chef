@@ -75,7 +75,7 @@ const MissionVision = () => {
             
             <div className="mv-card-body">
               <p style={{ marginBottom: '20px', color: 'white' }}>
-                To enrich culinary experiences worldwide by providing pure, high-quality, and authentically sourced food products. 
+                To provide pure and healthy products to customers all over Pakistan.  
               </p>
               <p style={{ margin: 0, color: 'white' }}>
                 We strive to foster sustainable partnerships across our supply chain while maintaining uncompromising standards of hygiene and manufacturing excellence.
@@ -98,7 +98,7 @@ const MissionVision = () => {
             
             <div className="mv-card-body">
               <p style={{ margin: 0, color: 'white' }}>
-                To be the globally preferred partner in the food and spice industry, recognized for our integrity, innovation, and unwavering dedication to delivering authentic flavors that unite cultures.
+                To become Pakistan's most trusted and leading food brand, recognized for our quality, integrity and innovaion.
               </p>
             </div>
           </div>

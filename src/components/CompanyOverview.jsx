@@ -48,7 +48,7 @@ const CompanyOverview = () => {
 
             <p>
               UK Chef London Foods is a trusted manufacturer and distributor
-              of premium spices, seasonings, and culinary essentials.
+              of premium spices, seasonings, sauces, mayonees and culinary essentials.
               Combining authentic Pakistani flavors with international quality
               standards, we deliver products that inspire confidence in every
               professional and home kitchen.
@@ -109,7 +109,7 @@ const CompanyOverview = () => {
           {/* IMAGE */}
           <div className="premium-radius premium-image-hover-container" style={{ position: 'relative', overflow: 'hidden', height: 'auto', display: 'flex' }}>
             <img
-              src="https://res.cloudinary.com/dwgwwlbrg/image/upload/v1784385522/16699c4c-a4ac-4e93-b271-8a296e9eaafd_nfwbgr.png"
+              src="https://res.cloudinary.com/dwgwwlbrg/image/upload/v1784922633/ChatGPT_Image_Jul_25_2026_12_49_54_AM_v70iey.png"
               alt="Premium Spices"
               style={{ width: '100%', height: 'auto', display: 'block' }}
             />
